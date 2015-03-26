@@ -1,14 +1,30 @@
-source 'http://rubygems.org'
+#source 'http://rubygems.org'
+source 'http://ruby.taobao.org'
 
-gem 'rails', '3.0.3'
+gem 'rails', '3.2.21'
 
-gem 'capistrano', '2.5.19'
-gem 'open4',      '0.9.3'
-gem 'syntax',     '1.0.0'
+gem 'capistrano', '2.15.5'
+gem 'open4',      '~> 1.3.4'
+gem 'syntax',     '~> 1.2.0'
 gem 'version_fu'
 gem 'devise'
-gem 'compass'
 gem 'haml'
+
+gem 'byebug', group: [:development, :test]
+
+# Gems used only for assets and not required
+# in production environments by default.
+group :assets do
+  gem 'sass-rails',   '~> 3.2.6'
+  gem 'coffee-rails', '~> 3.2.2'
+
+  gem 'compass-rails'
+
+  # See https://github.com/sstephenson/execjs#readme for more supported runtimes
+  # gem 'therubyracer', :platforms => :ruby
+
+  gem 'uglifier', '>= 1.0.3'
+end
 
 group :development do
   gem 'sqlite3-ruby', :require => 'sqlite3'
@@ -16,11 +32,12 @@ end
 
 group :test do
   gem 'sqlite3-ruby', :require => 'sqlite3'
-  gem 'test-unit', '2.0.9', :require => 'test/unit'
+  gem 'test-unit', '~> 2.0', :require => 'test/unit'
   gem 'mocha'
   gem 'factory_girl_rails'
 end
 
 group :production do
-  gem 'mysql'
+  gem 'mysql2'
+  #gem 'sqlite3-ruby', :require => 'sqlite3'
 end

@@ -20,7 +20,7 @@
        <% for template in @template_infos %>
          <div id="<%= template.first %>_desc" class="template_info" style="display:none;">
              <b><%= template.first.to_s.titleize %>:</b><br />
-             <%= template.last %>
+             <%= template.last.html_safe %>
          </div>
        <% end %>
   </div>

@@ -1,0 +1,1 @@
+Dir["#{Rails.root}/lib/exception_notification/*.rb"].each {|file| require file }

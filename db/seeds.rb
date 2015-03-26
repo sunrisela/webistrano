@@ -8,7 +8,7 @@
 
 User.create!(
   :login => 'admin',
-  :email => 'admin@example.com',
-  :password => 'admin!',
-  :password_confirmation => 'admin!'
+  :email => 'admin@zhiping.tv',
+  :password => 'rcaproject',
+  :password_confirmation => 'rcaproject'
 ).make_admin!

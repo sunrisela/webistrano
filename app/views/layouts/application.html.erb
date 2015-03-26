@@ -47,6 +47,9 @@
         <% unless flash[:error].blank? %>
           <%= error_flash(flash[:error]) %>
         <% end %>
+        
+        <p class="notice"><%= notice %></p>
+        <p class="alert"><%= alert %></p>
 
         <%= yield :action_box %>
 
