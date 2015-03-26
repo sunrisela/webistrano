@@ -12,6 +12,9 @@ gem 'haml'
 
 gem 'byebug', group: [:development, :test]
 
+gem 'sqlite3-ruby', :require => 'sqlite3', group: [:development, :test]
+gem 'mysql2', group: [:production]
+
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
@@ -26,18 +29,11 @@ group :assets do
   gem 'uglifier', '>= 1.0.3'
 end
 
-group :development do
-  gem 'sqlite3-ruby', :require => 'sqlite3'
-end
-
 group :test do
-  gem 'sqlite3-ruby', :require => 'sqlite3'
   gem 'test-unit', '~> 2.0', :require => 'test/unit'
   gem 'mocha'
   gem 'factory_girl_rails'
 end
 
-group :production do
-  gem 'mysql2'
-  #gem 'sqlite3-ruby', :require => 'sqlite3'
-end
+# deploy
+gem 'rvm-capistrano'

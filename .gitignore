@@ -43,4 +43,9 @@ pickle-email-*.html
 /config/*.yml
 /config/webistrano_config.rb
 
+# deploy
+Capfile
+/config/deploy.rb
+/config/unicorn.rb
+
 .DS_Store
