@@ -3,6 +3,8 @@ source 'http://ruby.taobao.org'
 
 gem 'rails', '3.2.21'
 
+gem 'jquery-rails', '~> 2.1.4'
+
 gem 'capistrano', '2.15.5'
 gem 'open4',      '~> 1.3.4'
 gem 'syntax',     '~> 1.2.0'
