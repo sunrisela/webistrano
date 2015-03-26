@@ -12,7 +12,7 @@ gem 'haml'
 
 gem 'byebug', group: [:development, :test]
 
-gem 'sqlite3-ruby', :require => 'sqlite3', group: [:development, :test]
+gem 'sqlite3-ruby', group: [:development, :test]
 gem 'mysql2', group: [:production]
 
 # Gems used only for assets and not required
