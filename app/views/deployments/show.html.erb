@@ -36,7 +36,33 @@
 
       $('header').scrollTo();
     }
-
+    
+  <% unless @deployment.completed? -%>
+    function update_status(callback){
+      var params = {
+        random_differentiator: Math.floor(Math.random()*50000), // work around IE caching bug
+        auto_scroll: $('auto_scroll_log').checked
+      };
+      $.get('<%= project_stage_deployment_path(@project, @stage, @deployment) %>.js', params, function(html){
+        $('#status_info').html(html);
+        check_auto_scroll_log();
+        if(typeof callback == "function") callback();
+      });
+    }
+    
+    function loop_status(){
+      if(!$('#auto_scroll_log').data('completed')){
+        setTimeout(function(){
+          update_status(loop_status);
+        }, 3000);
+      }
+    }
+    
+    $(function(){
+      check_auto_scroll_log();
+      loop_status();
+    });
+  <% end -%>
   </script>
 
 <% end %>

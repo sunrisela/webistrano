@@ -22,8 +22,9 @@ module Webistrano
           stop:    "if [ -f #{unicorn_pid} ] && [ -e /proc/$(cat #{unicorn_pid}) ]; then kill -QUIT `cat #{unicorn_pid}`; fi"
         }
         
-        cmds[:restart] = "#{cmds[:stop]} && #{cmds[:start]}"
         cmds[:reload]  = "if [ -f #{unicorn_pid} ] && [ -e /proc/$(cat #{unicorn_pid}) ]; then kill -USR2 `cat #{unicorn_pid}`; else #{cmds[:start]}; fi"
+        #cmds[:restart] = "#{cmds[:stop]} && #{cmds[:start]}"
+        cmds[:restart] = cmds[:reload]
 
         namespace :webistrano do
           namespace :unicorn do
