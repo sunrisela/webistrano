@@ -43,7 +43,7 @@
     function update_status(callback){
       var params = {
         random_differentiator: Math.floor(Math.random()*50000), // work around IE caching bug
-        auto_scroll: $('#auto_scroll_log').checked
+        auto_scroll: $('#auto_scroll_log')[0].checked
       };
       $.ajax({
         url: '<%= project_stage_deployment_path(@project, @stage, @deployment) %>.js',
