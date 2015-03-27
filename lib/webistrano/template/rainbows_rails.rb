@@ -22,8 +22,9 @@ module Webistrano
           stop:    "if [ -f #{rainbows_pid} ] && [ -e /proc/$(cat #{rainbows_pid}) ]; then kill -QUIT `cat #{rainbows_pid}`; fi"
         }
         
-        cmds[:restart] = "#{cmds[:stop]} && #{cmds[:start]}"
         cmds[:reload]  = "if [ -f #{rainbows_pid} ] && [ -e /proc/$(cat #{rainbows_pid}) ]; then kill -USR2 `cat #{rainbows_pid}`; else #{cmds[:start]}; fi"
+        #cmds[:restart] = "#{cmds[:stop]} && #{cmds[:start]}"
+        cmds[:restart] = cmds[:reload]
 
         namespace :webistrano do
           namespace :rainbows do
