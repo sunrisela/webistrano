@@ -36,27 +36,27 @@
       }
 
       //$('header').scrollTo();
-      $('html,body').animate({scrollTop: $('header').offset().top});
+      $('html,body').animate({scrollTop: $('#header').offset().top});
     }
     
   <% unless @deployment.completed? -%>
     function update_status(callback){
       var params = {
         random_differentiator: Math.floor(Math.random()*50000), // work around IE caching bug
-        auto_scroll: $('auto_scroll_log').checked
+        auto_scroll: $('#auto_scroll_log').checked
       };
       $.ajax({
         url: '<%= project_stage_deployment_path(@project, @stage, @deployment) %>.js',
         type: 'GET',
         data: params,
-        dataType: 'html/js',
+        dataType: 'text',
         success: function(data) {
           $('#status_info').html(data);
           check_auto_scroll_log();
           if(typeof callback == "function") callback();
         },
         error: function(jqXHR, textStatus, exception) {
-          alert(jqXHR.statusText+": "+"error status "+jqXHR.status+".");
+          console.log("AJAX access failed("+jqXHR.status+"). "+textStatus+": "+exception+".");
         }
       });
     }
