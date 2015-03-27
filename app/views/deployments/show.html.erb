@@ -21,20 +21,22 @@
   <script type="text/javascript">
 
     function check_auto_scroll_log(){
-      var scroller = $("auto_scroll_log");
-      var bottom_marker = $('back_link_at_the_bottom');
+      var scroller = $("#auto_scroll_log");
+      var bottom_marker = $('#back_link_at_the_bottom');
 
-      if(scroller && scroller.checked && bottom_marker){
-        bottom_marker.scrollTo();
+      if(scroller.length && scroller[0].checked && bottom_marker.length){
+        // bottom_marker.scrollTo();
+        $('html,body').animate({scrollTop: bottom_marker.offset().top});
       }
     }
 
     function scroll_to_top(){
-      if ( $('auto_scroll_log').checked ){
-        $('auto_scroll_log').checked = false;
+      if ( $('#auto_scroll_log')[0].checked ){
+        $('#auto_scroll_log')[0].checked = false;
       }
 
-      $('header').scrollTo();
+      //$('header').scrollTo();
+      $('html,body').animate({scrollTop: $('header').offset().top});
     }
     
   <% unless @deployment.completed? -%>

@@ -46,7 +46,7 @@
 
     function toggle_host(){
       var host_id = /host_(\d+)/.exec(this.id)[1];
-      var checked = $('deployment_excluded_host_ids_' + host_id).getAttribute('checked');
+      var checked = $('#deployment_excluded_host_ids_' + host_id).attr('checked');
 
       if( checked == 'checked' ){
         enable_host(host_id);
@@ -56,31 +56,27 @@
     }
 
     function disable_host(host_id){
-      var on = $("host_" + host_id + "_on");
-      var off = $("host_" + host_id + "_off");
+      var on = $("#host_" + host_id + "_on");
+      var off = $("#host_" + host_id + "_off");
 
       on.hide();
       off.show();
-      $('deployment_excluded_host_ids_' + host_id).writeAttribute('checked', 'checked');
-      on.up('tr').removeClassName('enabled_host');
-      on.up('tr').addClassName('disabled_host');
+      $('#deployment_excluded_host_ids_' + host_id).attr('checked', 'checked');
+      on.closest('tr').removeClass('enabled_host').addClass('disabled_host');
     }
 
     function enable_host(host_id){
-      var on = $("host_" + host_id + "_on");
-      var off = $("host_" + host_id + "_off");
+      var on = $("#host_" + host_id + "_on");
+      var off = $("#host_" + host_id + "_off");
 
       off.hide();
       on.show();
-      $('deployment_excluded_host_ids_' + host_id).writeAttribute('checked', false);
-      on.up('tr').addClassName('enabled_host');
-      on.up('tr').removeClassName('disabled_host');
+      $('#deployment_excluded_host_ids_' + host_id).attr('checked', false);
+      on.closest('tr').addClass('enabled_host').removeClass('disabled_host');
     }
 
-    Event.observe(window, 'load', function(){
-      $$('tr.toggle_host').each(function(el){
-        el.observe('click', toggle_host);
-      })
+    $(function(){
+      $('#excluded_hosts_form').on('click', 'tr.toggle_host', toggle_host);
     });
   </script>
 <% end %>
