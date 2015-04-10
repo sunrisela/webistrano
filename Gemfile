@@ -41,6 +41,6 @@ end
 gem 'unicorn'
 
 # deploy
-gem 'rvm-capistrano'
+gem 'rvm-capistrano', :require => false
 gem 'whenever', :require => false
 
