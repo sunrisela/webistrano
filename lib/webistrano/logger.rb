@@ -57,7 +57,7 @@ module Webistrano
     def write_msg(msg)
       @deployment.reload
       @deployment.transaction do 
-        @deployment.log = (@deployment.log || '') + msg
+        @deployment.log = (@deployment.log || '') + msg.force_encoding('utf-8')
         @deployment.save!
       end
     end
