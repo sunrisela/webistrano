@@ -59,7 +59,7 @@
   <div id="footer">
     <div id="footer_logged">
       <% if user_signed_in? %>
-       Logged in as <%= link_to current_user.login, user_path(current_user) %> | <%= link_to 'Logout', destroy_user_session_path %>
+       Logged in as <%= link_to current_user.login, user_path(current_user) %> | <%= link_to 'Logout', destroy_user_session_path, :method => :delete %>
       <% end %>
     </div>
     Copyright &copy; 2007, 2008, 2009 | Version <%= WEBISTRANO_VERSION %> | <a href="http://labs.peritor.com/webistrano" target="_blank">http://labs.peritor.com/webistrano</a>
