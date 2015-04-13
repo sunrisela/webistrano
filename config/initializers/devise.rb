@@ -98,6 +98,9 @@ Devise.setup do |config|
 
   # Setup a pepper to generate the encrypted password.
   # config.pepper = 'aaf0bd71be246d4d90dd1a28acdb9576b330c0b545353ca38c141575e5f6a4006bc9979a5563b218153618d4e83186614ebb6ed02c19c75fc3f31149961c47e9'
+  if defined?(WebistranoConfig) && WebistranoConfig.try(:[], :devise_settings).try(:[], :pepper)
+    config.pepper = WebistranoConfig[:devise_settings][:pepper]
+  end
 
   # ==> Configuration for :confirmable
   # A period that the user is allowed to access the website even without
