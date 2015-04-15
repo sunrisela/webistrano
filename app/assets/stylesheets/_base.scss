@@ -552,6 +552,19 @@ table.sortable tbody tr:hover { background-color: #CCCCCC; }
 table.sortable td { padding: 4px; }
 table.sortable th { padding: 4px; white-space: nowrap;}
 
+table.log_output {
+  background-color: #f2f2f2;
+  font-family: Courier, "Courier New", monospace;
+  td,th {
+    border: 2px solid #fefefe;
+    padding: 2px 8px;
+  }
+  td.index {
+    color: #aaa;
+    text-align: right;
+  }
+}
+
 /* MISC */
 
 div.log_output {
