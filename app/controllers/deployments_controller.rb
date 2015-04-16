@@ -20,6 +20,7 @@ class DeploymentsController < ApplicationController
     respond_with(@deployment) do |format|
       format.js {
         if @deployment.completed?
+          @log_from = 0
           response.headers['Deployment-Completed'] = "1"
           render :partial => 'status'
         else
