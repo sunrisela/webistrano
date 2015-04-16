@@ -27,6 +27,8 @@
       if(scroller.length && scroller[0].checked && bottom_marker.length){
         // bottom_marker.scrollTo();
         $('html,body').animate({scrollTop: bottom_marker.offset().top}, callback);
+      } else {
+        if(typeof callback == "function") callback();
       }
     }
 
