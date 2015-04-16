@@ -20,13 +20,13 @@
 
   <script type="text/javascript">
 
-    function check_auto_scroll_log(){
+    function check_auto_scroll_log(callback){
       var scroller = $("#auto_scroll_log");
       var bottom_marker = $('#back_link_at_the_bottom');
 
       if(scroller.length && scroller[0].checked && bottom_marker.length){
         // bottom_marker.scrollTo();
-        $('html,body').animate({scrollTop: bottom_marker.offset().top});
+        $('html,body').animate({scrollTop: bottom_marker.offset().top}, callback);
       }
     }
 
@@ -39,20 +39,25 @@
       $('html,body').animate({scrollTop: $('#header').offset().top});
     }
     
-  <% unless @deployment.completed? -%>
+  
     function update_status(callback){
       var params = {
         random_differentiator: Math.floor(Math.random()*50000), // work around IE caching bug
-        auto_scroll: $('#auto_scroll_log')[0].checked
+        auto_scroll: $('#auto_scroll_log')[0].checked,
+        log_from: $('#log_container >tr:last>td:first').text()
       };
       $.ajax({
         url: '<%= project_stage_deployment_path(@project, @stage, @deployment) %>.js',
         type: 'GET',
         data: params,
         dataType: 'text',
-        success: function(data) {
-          $('#status_info').html(data);
-          check_auto_scroll_log();
+        success: function(data, status, xhr) {
+          var $html = $(data.replace(/(<\/?[^\>]*\>)[\n ]+/g, '$1')).hide();
+          $('#log_container').append($html);
+          check_auto_scroll_log(function(){
+            $html.fadeIn('slow');
+          });
+          if(xhr.getResponseHeader('Deployment-Completed')=='1') $('#auto_scroll_log').data('completed', true);
           if(typeof callback == "function") callback();
         },
         error: function(jqXHR, textStatus, exception) {
@@ -60,7 +65,7 @@
         }
       });
     }
-    
+    <% unless @deployment.completed? -%>
     function loop_status(){
       if(!$('#auto_scroll_log').data('completed')){
         setTimeout(function(){
