@@ -41,7 +41,7 @@
       $('html,body').animate({scrollTop: $('#header').offset().top});
     }
     
-  
+  <% unless @deployment.completed? -%>
     function update_status(callback){
       var params = {
         random_differentiator: Math.floor(Math.random()*50000), // work around IE caching bug
@@ -54,12 +54,16 @@
         data: params,
         dataType: 'text',
         success: function(data, status, xhr) {
-          var $html = $(data.replace(/(<\/?[^\>]*\>)[\n ]+/g, '$1')).hide();
-          $('#log_container').append($html);
-          check_auto_scroll_log(function(){
-            $html.fadeIn('slow');
-          });
-          if(xhr.getResponseHeader('Deployment-Completed')=='1') $('#auto_scroll_log').data('completed', true);
+          if(xhr.getResponseHeader('Deployment-Completed')=='1'){
+            $('#status_info').html(data);
+            check_auto_scroll_log();
+          } else {
+            var $html = $(data.replace(/(<\/?[^\>]*\>)[\n ]+/g, '$1')).hide();
+            $('#log_container').append($html);
+            check_auto_scroll_log(function(){
+              $html.fadeIn('slow');
+            });
+          }
           if(typeof callback == "function") callback();
         },
         error: function(jqXHR, textStatus, exception) {
@@ -67,7 +71,7 @@
         }
       });
     }
-    <% unless @deployment.completed? -%>
+    
     function loop_status(){
       if(!$('#auto_scroll_log').data('completed')){
         setTimeout(function(){

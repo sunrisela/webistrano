@@ -17,9 +17,15 @@ class DeploymentsController < ApplicationController
     @deployment = @stage.deployments.find(params[:id])
     set_auto_scroll
     @log_from = params[:log_from].to_i
-    response.headers['Deployment-Completed'] = "1" if @deployment.completed?
     respond_with(@deployment) do |format|
-      format.js { render :partial => 'log' }
+      format.js {
+        if @deployment.completed?
+          response.headers['Deployment-Completed'] = "1"
+          render :partial => 'status'
+        else
+          render :partial => 'log'
+        end
+      }
     end
   end
 
