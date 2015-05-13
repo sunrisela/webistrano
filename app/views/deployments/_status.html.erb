@@ -52,17 +52,19 @@
 <fieldset class="fieldset">
   <legend>Log</legend>
   <div style="float:right; padding: 0px 5px 10px 0px; *padding: 0px"><input type="checkbox" class="noframe" id="auto_scroll_log" <%= @auto_scroll ? 'checked="checked"' : ''%> data-completed="<%= @deployment.completed? %>"> <label for="auto_scroll_log" class="redtext"><b>auto scroll</b></label></div>
-  <table class="log_output" width="100%">
-    <thead>
-      <tr>
-        <th width="40px">&nbsp;</th>
-        <th>&nbsp;</th>
-      </tr>
-    </thead>
-    <tbody id="log_container">
-      <%= render 'log' %>
-    </tbody>
-  </table>
+  <div style="clear: both; overflow-y: auto; max-height: 600px">
+    <table class="log_output" width="100%">
+      <thead>
+        <tr>
+          <th width="40px">&nbsp;</th>
+          <th>&nbsp;</th>
+        </tr>
+      </thead>
+      <tbody id="log_container">
+        <%= render 'log' %>
+      </tbody>
+    </table>
+  </div>
 </fieldset>
 
 <br />
