@@ -70,5 +70,7 @@ module Webistrano
       config.secret_token = WebistranoConfig[:session_secret]
     end
 
+    config.eager_load_paths += %W(#{config.root}/lib)
+
   end
 end

@@ -1,3 +1,10 @@
+GIT
+  remote: git://github.com/charlescui/aliyun_ruby_api.git
+  revision: aa854f7b0038bfaf65481a807808e049c191b9f8
+  specs:
+    aliyun_ruby_api (1.0.1)
+      ruby-hmac
+
 GEM
   remote: http://ruby.taobao.org/
   specs:
@@ -22,12 +29,19 @@ GEM
       activesupport (= 3.2.21)
       arel (~> 3.0.2)
       tzinfo (~> 0.3.29)
+    activerecord-mysql-adapter (0.0.1)
+      activerecord (>= 3.2.9)
+      activesupport (>= 3.2.9)
+      mysql (>= 2.9.0)
     activeresource (3.2.21)
       activemodel (= 3.2.21)
       activesupport (= 3.2.21)
     activesupport (3.2.21)
       i18n (~> 0.6, >= 0.6.4)
       multi_json (~> 1.0)
+    aliyun-ess (0.1.7)
+      rack (~> 1.4)
+      yajl-ruby (~> 1.0)
     arel (3.0.3)
     bcrypt (3.1.10)
     builder (3.0.4)
@@ -102,6 +116,7 @@ GEM
     mocha (1.1.0)
       metaclass (~> 0.0.1)
     multi_json (1.11.0)
+    mysql (2.9.1)
     mysql2 (0.3.18)
     net-scp (1.2.1)
       net-ssh (>= 2.6.5)
@@ -144,6 +159,7 @@ GEM
       json (~> 1.4)
     responders (1.1.2)
       railties (>= 3.2, < 4.2)
+    ruby-hmac (0.4.0)
     rvm-capistrano (1.5.6)
       capistrano (~> 2.15.4)
     sass (3.4.13)
@@ -181,11 +197,15 @@ GEM
       rack (>= 1.0)
     whenever (0.9.4)
       chronic (>= 0.6.3)
+    yajl-ruby (1.2.1)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
+  activerecord-mysql-adapter
+  aliyun-ess
+  aliyun_ruby_api!
   byebug
   capistrano (= 2.15.5)
   coffee-rails (~> 3.2.2)

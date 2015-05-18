@@ -16,7 +16,7 @@ gem 'byebug', group: [:development, :test]
 
 gem 'sqlite3-ruby', group: [:development, :test]
 gem 'mysql2', group: [:production]
-
+gem 'activerecord-mysql-adapter'
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
@@ -44,3 +44,6 @@ gem 'unicorn'
 gem 'rvm-capistrano', :require => false
 gem 'whenever', :require => false
 
+# 阿里云服务SDK
+gem 'aliyun_ruby_api', github: 'charlescui/aliyun_ruby_api'
+gem 'aliyun-ess'
