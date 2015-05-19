@@ -13,9 +13,9 @@ module Webistrano
                 })
                 group = self.fetch_scaling_group_by_name(name)
                 # 伸缩组ID
-                id = group.scaling_group_id
+                @id = group.scaling_group_id
                 @ecs = ::Aliyun::Deploy::EcsApi.new
-                @ess = ::Aliyun::Deploy::EssApi.new(id)
+                @ess = ::Aliyun::Deploy::EssApi.new(@id)
             end
 
             # 得到该伸缩组下面，目前启动的服务器全部实例
@@ -41,6 +41,16 @@ module Webistrano
             # 根据伸缩组名称查找伸缩组实例:'rca.ad.ess'
             def fetch_scaling_group_by_name(name)
                 ::Aliyun::ESS::ScalingGroup.find_by('scaling_group_name.1' => name)
+            end
+
+            # 恢复伸缩组弹性
+            def enable_scaling_group
+                ::Aliyun::ESS::Base.get('/', {'action' => 'EnableScalingGroup', 'scaling_group_id' => @id})
+            end
+
+            # 暂停伸缩组弹性，不会释放已经在组中的服务器
+            def disable_scaling_group
+                ::Aliyun::ESS::Base.get('/', {'action' => 'DisableScalingGroup', 'scaling_group_id' => @id})
             end
         end
     end
