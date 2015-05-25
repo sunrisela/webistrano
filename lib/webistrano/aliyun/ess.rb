@@ -7,6 +7,9 @@ module Webistrano
         class Ess
             def initialize(name, options={})
                 @options = options
+		# aliyun_ruby_api库中需要阿里云的秘钥作为环境变量参数
+		ENV['ALIYUNACCESSKEYID'] = options[:access_key_id] || ENV['ALIYUN_ACCESS_KEY_ID']
+		ENV['ALIYUNACCESSKEYSECRET'] = options[:secret_access_key] || ENV['ALIYUN_SECRET_ACCESS_KEY']
                 # 配置ESS SDK初始化
                 ::Aliyun::ESS::Base.establish_connection!({
                     :access_key_id => options[:access_key_id] || ENV['ALIYUN_ACCESS_KEY_ID'],
