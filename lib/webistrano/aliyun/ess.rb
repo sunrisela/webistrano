@@ -7,19 +7,19 @@ module Webistrano
         class Ess
             def initialize(name, options={})
                 @options = options
-		# aliyun_ruby_api库中需要阿里云的秘钥作为环境变量参数
-		ENV['ALIYUNACCESSKEYID'] = options[:access_key_id] || ENV['ALIYUN_ACCESS_KEY_ID']
-		ENV['ALIYUNACCESSKEYSECRET'] = options[:secret_access_key] || ENV['ALIYUN_SECRET_ACCESS_KEY']
+                # aliyun_ruby_api库中需要阿里云的秘钥作为环境变量参数
+                access_key_id = options[:access_key_id] || ENV['ALIYUN_ACCESS_KEY_ID']
+                access_key_secret = options[:secret_access_key] || ENV['ALIYUN_SECRET_ACCESS_KEY']
                 # 配置ESS SDK初始化
                 ::Aliyun::ESS::Base.establish_connection!({
-                    :access_key_id => options[:access_key_id] || ENV['ALIYUN_ACCESS_KEY_ID'],
-                    :secret_access_key => options[:secret_access_key] || ENV['ALIYUN_SECRET_ACCESS_KEY']
+                    :access_key_id => access_key_id,
+                    :secret_access_key => access_key_secret
                 })
                 group = self.fetch_scaling_group_by_name(name)
                 # 伸缩组ID
                 @id = group.scaling_group_id
-                @ecs = ::Aliyun::Deploy::EcsApi.new
-                @ess = ::Aliyun::Deploy::EssApi.new(@id)
+                @ecs = ::Aliyun::Deploy::EcsApi.new(:access_key_id => access_key_id, :access_key_secret => access_key_secret)
+                @ess = ::Aliyun::Deploy::EssApi.new(@id, :access_key_id => access_key_id, :access_key_secret => access_key_secret)
             end
 
             # 得到该伸缩组下面，目前启动的服务器全部实例
