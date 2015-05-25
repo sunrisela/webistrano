@@ -31,7 +31,7 @@ module Webistrano
               arg2 = docker_container_name
               script.gsub!('$1', arg1)
               script.gsub!('$2', arg2)
-              debugger
+              
               logger.trace "** running docker script:\n"+script
               #invoke_command script, :via => run_method, :as => fetch(:runner, :aliyun_app)
             end
@@ -42,7 +42,7 @@ module Webistrano
               arg2 = docker_db_container_name
               script.gsub!('$1', arg1)
               script.gsub!('$2', arg2)
-              debugger
+              
               logger.trace "** running docker script:\n"+script
               invoke_command script, :via => run_method, :as => fetch(:runner, :aliyun_db)
             end
@@ -52,10 +52,10 @@ module Webistrano
         before 'deploy' do
           # dynamic create aliyun role with ess hosts
           ess = Webistrano::Aliyun::Ess.new(aliyun_ess_name, :access_key_id => aliyun_access_key_id, :secret_access_key => aliyun_secret_access_key)
-          debugger
+          
           ips = ess.public_ips
           ips.each{|ip| roles[:aliyun_app] << ip }
-          debugger
+          
           logger.trace "ESS: #{aliyun_ess_name}, instances: #{ips}"
         end
         
