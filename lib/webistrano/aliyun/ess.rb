@@ -5,11 +5,12 @@
 module Webistrano
     module Aliyun
         class Ess
-            def initialize(name)
+            def initialize(name, options={})
+                @options = options
                 # 配置ESS SDK初始化
                 ::Aliyun::ESS::Base.establish_connection!({
-                    :access_key_id => ENV['ALIYUNACCESSKEYID'],
-                    :secret_access_key => ENV['ALIYUNACCESSKEYSECRET']
+                    :access_key_id => options[:access_key_id] || ENV['ALIYUN_ACCESS_KEY_ID'],
+                    :secret_access_key => options[:secret_access_key] || ENV['ALIYUN_SECRET_ACCESS_KEY']
                 })
                 group = self.fetch_scaling_group_by_name(name)
                 # 伸缩组ID

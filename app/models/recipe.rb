@@ -9,7 +9,7 @@ class Recipe < ActiveRecord::Base
     :presence   => true
   validate :check_syntax
 
-  attr_accessible :name, :body, :description
+  attr_accessible :user_id, :name, :body, :description
   
   scope :ordered, order("name ASC")
   

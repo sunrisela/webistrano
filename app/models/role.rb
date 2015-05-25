@@ -23,7 +23,7 @@ class Role < ActiveRecord::Base
   
   attr_accessor :custom_name
   
-  DEFAULT_NAMES = %w(app db web)
+  DEFAULT_NAMES = %w(app db web aliyun_db)
   
   before_validation :set_name_from_custom_name
   
