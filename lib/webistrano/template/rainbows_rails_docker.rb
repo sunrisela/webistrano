@@ -36,8 +36,14 @@ module Webistrano
           script.gsub!(/\\[\s]+/, '')
           # then
           script.gsub!(/then[\s]+/, 'then ')
+          # else
+          scirpt.gsub!(/else[\s]*[\r\n]+[\s]*/, 'else ')
           # fi
           script.gsub!(/[\r\n]+[\s]*fi/,'; fi')
+          # do
+          scirpt.gsub!(/do[\s]*[\r\n]+[\s]*/, 'do ')
+          # done
+          script.gsub!(/[\r\n]+[\s]*done/,'; done')
           
           script.split(/[\r\n]+/).map{|e| str=e.strip; str if !str.blank? }.compact.join(" && ")
         end
