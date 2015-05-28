@@ -57,20 +57,23 @@ module Webistrano
         end
         
         after 'deploy' do
-          # dynamic create aliyun role with ess hosts
-          ess = Webistrano::Aliyun::Ess.new(aliyun_ess_name, :access_key_id => aliyun_access_key_id, :secret_access_key => aliyun_secret_access_key)
-          ips = ess.public_ips
-          #ips = ["120.26.77.217"]
-          ips = ips - aliyun_db_hosts
-          roles[:aliyun_app].push *ips, { :user => aliyun_user }
-
-          logger.trace "ESS: #{aliyun_ess_name}, instances: #{ips}"
-
           # restart docker container
           logger.trace "* docker executing: restart"
           
           run start_docker_cmd_blk.call, :hosts => aliyun_user ? aliyun_db_hosts.map{|e| "#{aliyun_user}@#{e}" } : aliyun_db_hosts
-          #webistrano.docker.restart
+          
+          # dynamic create aliyun role with ess hosts
+          if aliyun_ess_name.present?
+            ess = Webistrano::Aliyun::Ess.new(aliyun_ess_name, :access_key_id => aliyun_access_key_id, :secret_access_key => aliyun_secret_access_key)
+            ips = ess.public_ips
+            ips = ips - aliyun_db_hosts
+            roles[:aliyun_app].push *ips, { :user => aliyun_user }
+  
+            logger.trace "ESS: #{aliyun_ess_name}, instances: #{ips}"
+            
+            webistrano.docker.restart
+          end
+          
         end
       EOS
 
