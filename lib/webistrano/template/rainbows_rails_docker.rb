@@ -37,6 +37,7 @@ module Webistrano
           # then
           script.gsub!(/then[\s]+/, 'then ')
           # else
+          script.gsub!(/[\r\n]+[\s]*else/,'; else')
           script.gsub!(/else[\s]*[\r\n]+[\s]*/, 'else ')
           # fi
           script.gsub!(/[\r\n]+[\s]*fi/,'; fi')
