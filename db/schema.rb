@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150525035840) do
+ActiveRecord::Schema.define(:version => 20150528082046) do
 
   create_table "configuration_parameters", :force => true do |t|
     t.string   "name"
@@ -48,6 +48,7 @@ ActiveRecord::Schema.define(:version => 20150525035840) do
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "alias_name"
   end
 
   create_table "project_configurations", :force => true do |t|

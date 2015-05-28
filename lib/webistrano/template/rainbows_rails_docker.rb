@@ -5,6 +5,7 @@ module Webistrano
 
       # hosts 若有必要，需要加入 aliyun_db 角色
       CONFIG = Webistrano::Template::RainbowsRails::CONFIG.dup.merge({
+        :aliyun_user              => 'root',
         :aliyun_access_key_id     => '访问阿里云API的密钥ID',
         :aliyun_secret_access_key => '访问阿里云API的密钥',
         :aliyun_ess_name          => '阿里云 ESS 伸缩组名称',
@@ -23,47 +24,53 @@ module Webistrano
       EOS
 
       TASKS = Webistrano::Template::Base::TASKS + <<-'EOS'
+        start_docker_cmd_blk = lambda do
+          script = docker_startup_script.dup
+          
+          script.gsub!('$1', docker_repository)
+          script.gsub!('$2', docker_container_name)
+          
+          # 过滤注释
+          script.gsub!(/^#.*$/,'')
+          # \
+          script.gsub!(/\\[\s]+/, '')
+          # then
+          script.gsub!(/then[\s]+/, 'then ')
+          # fi
+          script.gsub!(/[\r\n]+[\s]*fi/,'; fi')
+          
+          script.split(/[\r\n]+/).map{|e| str=e.strip; str if !str.blank? }.compact.join(" && ")
+        end
+        
         namespace :webistrano do
           namespace :docker do
-            task :restart, :roles => [:aliyun_app], :except => { :no_release => true } do
-              script = docker_startup_script.split("\n").select{|e| e.strip !~ /^#/ }.join(";")
-              arg1 = docker_repository # or the key: rollback
-              arg2 = docker_container_name
-              script.gsub!('$1', arg1)
-              script.gsub!('$2', arg2)
-              
-              logger.trace "** running docker script:\n"+script
-              #invoke_command script, :via => run_method, :as => fetch(:runner, :aliyun_app)
-            end
-            
-            task :restart_db, :roles => [:aliyun_db], :except => { :no_release => true } do
-              script = docker_startup_script.split("\n").select{|e| e.strip !~ /^#/ }.join(";")
-              arg1 = docker_db_repository # or the key: rollback
-              arg2 = docker_db_container_name
-              script.gsub!('$1', arg1)
-              script.gsub!('$2', arg2)
-              
-              logger.trace "** running docker script:\n"+script
-              invoke_command script, :via => run_method, :as => fetch(:runner, :aliyun_db)
+            task :restart, :roles => [:aliyun_app] do
+              invoke_command start_docker_cmd_blk.call
             end
           end
         end
         
         before 'deploy' do
-          # dynamic create aliyun role with ess hosts
-          ess = Webistrano::Aliyun::Ess.new(aliyun_ess_name, :access_key_id => aliyun_access_key_id, :secret_access_key => aliyun_secret_access_key)
-          
-          ips = ess.public_ips
-          ips.each{|ip| roles[:aliyun_app] << ip }
-          
-          logger.trace "ESS: #{aliyun_ess_name}, instances: #{ips}"
+          role = roles.delete(:aliyun_db)
+          hosts = role ? role.servers.map(&:host) : []
+          set :aliyun_db_hosts, hosts
         end
         
         after 'deploy' do
+          # dynamic create aliyun role with ess hosts
+          ess = Webistrano::Aliyun::Ess.new(aliyun_ess_name, :access_key_id => aliyun_access_key_id, :secret_access_key => aliyun_secret_access_key)
+          ips = ess.public_ips
+          #ips = ["120.26.77.217"]
+          ips = ips - aliyun_db_hosts
+          roles[:aliyun_app].push *ips, { :user => aliyun_user }
+
+          logger.trace "ESS: #{aliyun_ess_name}, instances: #{ips}"
+
           # restart docker container
           logger.trace "* docker executing: restart"
-          webistrano.docker.restart_db
-          webistrano.docker.restart
+          
+          run start_docker_cmd_blk.call, :hosts => aliyun_user ? aliyun_db_hosts.map{|e| "#{aliyun_user}@#{e}" } : aliyun_db_hosts
+          #webistrano.docker.restart
         end
       EOS
 

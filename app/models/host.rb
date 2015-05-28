@@ -8,7 +8,7 @@ class Host < ActiveRecord::Base
     :length     => { :maximum => 250 }
   validate :guard_valid_hostname_or_ip
 
-  attr_accessible :name
+  attr_accessible :name, :alias_name
 
   before_validation :strip_whitespace
 

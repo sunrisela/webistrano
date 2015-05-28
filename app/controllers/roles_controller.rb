@@ -63,7 +63,7 @@ class RolesController < ApplicationController
 private
 
   def load_host_choices
-    @host_choices = Host.order("name ASC").collect {|h| [ h.name, h.id ] }
+    @host_choices = Host.order("name ASC").collect {|h| [ h.alias_name.present? ? "#{h.name} (#{h.alias_name})" : h.name, h.id ] }
   end
   
 end

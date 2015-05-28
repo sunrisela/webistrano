@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/charlescui/aliyun_ruby_api.git
-  revision: aa854f7b0038bfaf65481a807808e049c191b9f8
+  revision: 0d026cc4701b4a9776e564a38eb4fc552fade1ff
   specs:
     aliyun_ruby_api (1.0.1)
       ruby-hmac

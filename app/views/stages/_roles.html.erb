@@ -6,15 +6,17 @@
 <% else %>
   <table class="sortable">
     <tr>
-      <th width="25%">Host</th>
-      <th width="25%">Role</th>
-      <th width="24%">SSH Port</th>
-      <th width="25%">Attributes</th>
+      <th width="19%">Host</th>
+      <th width="20%">Host Alias</th>
+      <th width="13%">Role</th>
+      <th width="12%">SSH Port</th>
+      <th width="35%">Attributes</th>
       <th width="1%">Status</th>
     </tr>
   <% for role in @stage.roles %>
     <tr class="<%= cycle :even, :odd, :name => 'roles' %>">
       <td><%= link_to role.host.name, host_path(role.host) %></td>
+      <td><%= role.host.alias_name %></td>
       <td><%= role.name %></td>
       <td><%= role.ssh_port || 'default' %></td>
       <td><%= role.role_attribute_hash.inspect unless role.role_attribute_hash.blank?  %></td>

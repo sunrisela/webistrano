@@ -5,13 +5,15 @@
 
 <table class="sortable">
   <tr>
-    <th width="34%">Name</th>
-    <th width="33%">#Stages</th>
-    <th width="33%">#Roles</th>
+    <th width="30%">Name</th>
+    <th width="30%">Alias</th>
+    <th width="20%">#Stages</th>
+    <th width="20%">#Roles</th>
   </tr>
   <% for host in @hosts %>
     <tr class="<%= cycle :even, :odd  %>">
       <td><%= link_to host.name, host %></td>
+      <td><%= link_to host.alias_name, host if host.alias_name.present? %></td>
       <td><%= host.stages.count %></td>
       <td><%= host.roles.count %></td>
       <% if current_user.admin? %>
