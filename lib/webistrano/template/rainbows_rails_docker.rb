@@ -27,8 +27,8 @@ module Webistrano
         start_docker_cmd_blk = lambda do
           script = docker_startup_script.dup
           
-          script.gsub!('$1', docker_repository)
-          script.gsub!('$2', docker_container_name)
+          script.sub!('$1', docker_repository)
+          script.sub!('$2', docker_container_name)
           
           # 过滤注释
           script.gsub!(/^#.*$/,'')
