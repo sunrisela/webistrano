@@ -24,11 +24,11 @@ module Webistrano
       EOS
 
       TASKS = Webistrano::Template::Base::TASKS + <<-'EOS'
-        start_docker_cmd_blk = lambda do
+        start_docker_cmd_blk = lambda do |repository, container_name|
           script = docker_startup_script.dup
           
-          script.sub!('$1', docker_repository)
-          script.sub!('$2', docker_container_name)
+          script.sub!('$1', repository)
+          script.sub!('$2', container_name)
           
           # 过滤注释
           script.gsub!(/^#.*$/,'')
@@ -52,7 +52,7 @@ module Webistrano
         namespace :webistrano do
           namespace :docker do
             task :restart, :roles => [:aliyun_app] do
-              invoke_command start_docker_cmd_blk.call
+              invoke_command start_docker_cmd_blk.call(docker_repository, docker_container_name)
             end
           end
         end
@@ -67,7 +67,7 @@ module Webistrano
           # restart docker container
           logger.trace "* docker executing: restart"
           
-          run start_docker_cmd_blk.call, :hosts => aliyun_user ? aliyun_db_hosts.map{|e| "#{aliyun_user}@#{e}" } : aliyun_db_hosts
+          run start_docker_cmd_blk.call(docker_db_repository, docker_db_container_name), :hosts => aliyun_user ? aliyun_db_hosts.map{|e| "#{aliyun_user}@#{e}" } : aliyun_db_hosts
           
           # dynamic create aliyun role with ess hosts
           if aliyun_ess_name.present?
