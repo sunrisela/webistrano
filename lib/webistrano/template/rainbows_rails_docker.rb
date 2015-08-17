@@ -8,7 +8,7 @@ module Webistrano
         :aliyun_user              => 'root',
         :aliyun_access_key_id     => '访问阿里云API的密钥ID',
         :aliyun_secret_access_key => '访问阿里云API的密钥',
-        :aliyun_ess_name          => '阿里云 ESS 伸缩组名称',
+        :aliyun_ess_name          => '阿里云 ESS 伸缩组名称（若为空表示不启用ESS）',
         :docker_startup_script    => 'you should overwrite this item in a recipe.',
         :docker_repository        => 'docker 镜像地址',
         :docker_container_name    => 'docker 容器别名',

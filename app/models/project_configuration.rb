@@ -16,7 +16,8 @@ class ProjectConfiguration < ConfigurationParameter
       'pure_file'      => Webistrano::Template::PureFile,
       'unicorn_rails'  => Webistrano::Template::UnicornRails,
       'rainbows_rails' => Webistrano::Template::RainbowsRails,
-      'rainbows_rails_docker' => Webistrano::Template::RainbowsRailsDocker
+      'rainbows_rails_docker' => Webistrano::Template::RainbowsRailsDocker,
+      'docker'         => Webistrano::Template::Docker
     }
   end
 
