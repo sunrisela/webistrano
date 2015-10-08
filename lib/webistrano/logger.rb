@@ -18,16 +18,18 @@ module Webistrano
     end
     
     def log(level, message, line_prefix=nil)
-      if level <= self.level
+      if level <= self.level && message.present?
         indent = "%*s" % [MAX_LEVEL, "*" * (MAX_LEVEL - level)]
         
         message = hide_passwords(message)
         
         (message.respond_to?(:lines) ? message.lines : message).each do |line|
+          serialized_line = serialize_msg(line)
+          next if serialized_line.blank?
           if line_prefix
-            write_msg "#{indent} [#{line_prefix}] #{line.strip}\n"
+            write_msg "#{indent} [#{line_prefix}] #{serialized_line}\n"
           else
-            write_msg "#{indent} #{line.strip}\n"
+            write_msg "#{indent} #{serialized_line}\n"
           end
         end
       end
@@ -53,11 +55,22 @@ module Webistrano
       # not needed here
     end
     
+    def serialize_msg(msg)
+      serialized_msg = msg.strip
+      # filter ANSI color code
+      serialized_msg.gsub!(/\e\[[0-9A-Z]{2}\n?/, '')
+      serialized_msg.force_encoding('utf-8')
+    end
+    
     # actual writing of a msg to the DB
     def write_msg(msg)
       @deployment.reload
       @deployment.transaction do 
-        @deployment.log = (@deployment.log || '') + msg.force_encoding('utf-8')
+        @deployment.log = (@deployment.log || '') + msg
+        # fixed Maximum text length limited in DB.
+        if @deployment.log.length > 65535
+          @deployment.log = @deployment.log[-65535..-1]
+        end
         @deployment.save!
       end
     end
