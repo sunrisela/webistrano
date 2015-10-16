@@ -19,7 +19,7 @@ class Role < ActiveRecord::Base
     :presence  => true,
     :inclusion => { :in => 0..1 }
   
-  attr_accessible :name, :primary, :host_id, :no_release, :no_symlink, :ssh_port, :custom_name
+  attr_accessible :name, :primary, :host_id, :no_release, :no_symlink, :ssh_user, :ssh_port, :custom_name
   
   attr_accessor :custom_name
   
@@ -116,6 +116,9 @@ class Role < ActiveRecord::Base
   
   def role_attribute_hash
     role_attr = {}
+    if !self.ssh_user.blank?
+      role_attr[:user] = self.ssh_user
+    end
     if self.primary?
       role_attr[:primary] = true
     end

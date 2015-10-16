@@ -31,6 +31,10 @@
   <%= text_field 'role', 'ssh_port', :style =>'width:50px;' %>
 </p>
 <p>
+  <b>Custom SSH User</b> (leave blank for default)<br />
+  <%= text_field 'role', 'ssh_user', :style =>'width:100px;' %>
+</p>
+<p>
   <b>Primary</b> (tick this for the DB master)<br />
   <%= check_box 'role', 'primary', :style =>'' %>
 </p>
