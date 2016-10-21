@@ -173,8 +173,10 @@ dl {
 
 .content {
   text-align: left;
-  padding-right: ($menu_width + $margin);
+  // padding-right: ($menu_width + $margin);
   font-size: 12px;
+  overflow: hidden;
+  zoom: 1;
 
   & > h2:first-child {
     margin-top: 0;
@@ -527,6 +529,16 @@ div.flash_box_bottom {
   width: 100%;
   height:1px;
   overflow:hidden;
+}
+
+.clearfix:before,
+.clearfix:after {
+  display: table;
+  content: " ";
+}
+
+.clearfix:after {
+  clear: both;
 }
 
 .ontheright {
