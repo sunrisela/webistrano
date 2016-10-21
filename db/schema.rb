@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150528082046) do
+ActiveRecord::Schema.define(:version => 20161021042133) do
 
   create_table "configuration_parameters", :force => true do |t|
     t.string   "name"
@@ -23,6 +23,10 @@ ActiveRecord::Schema.define(:version => 20150528082046) do
     t.datetime "updated_at"
     t.integer  "prompt_on_deploy", :default => 0
   end
+
+  add_index "configuration_parameters", ["id", "type"], :name => "index_configuration_parameters_on_id_and_type"
+  add_index "configuration_parameters", ["project_id", "type", "name"], :name => "index_configuration_parameters_on_project_id_and_type_and_name"
+  add_index "configuration_parameters", ["stage_id"], :name => "index_configuration_parameters_on_stage_id"
 
   create_table "deployments", :force => true do |t|
     t.string   "task"
@@ -39,10 +43,16 @@ ActiveRecord::Schema.define(:version => 20150528082046) do
     t.string   "status",            :default => "running"
   end
 
+  add_index "deployments", ["stage_id", "created_at"], :name => "index_deployments_on_stage_id_and_created_at"
+  add_index "deployments", ["task", "status"], :name => "index_deployments_on_task_and_status"
+  add_index "deployments", ["user_id"], :name => "index_deployments_on_user_id"
+
   create_table "deployments_roles", :id => false, :force => true do |t|
     t.integer "deployment_id"
     t.integer "role_id"
   end
+
+  add_index "deployments_roles", ["deployment_id", "role_id"], :name => "index_deployments_roles_on_deployment_id_and_role_id"
 
   create_table "hosts", :force => true do |t|
     t.string   "name"
@@ -50,6 +60,8 @@ ActiveRecord::Schema.define(:version => 20150528082046) do
     t.datetime "updated_at"
     t.string   "alias_name"
   end
+
+  add_index "hosts", ["name"], :name => "index_hosts_on_name"
 
   create_table "project_configurations", :force => true do |t|
   end
@@ -62,6 +74,8 @@ ActiveRecord::Schema.define(:version => 20150528082046) do
     t.datetime "updated_at"
   end
 
+  add_index "projects", ["name"], :name => "index_projects_on_name"
+
   create_table "recipe_versions", :force => true do |t|
     t.integer  "recipe_id"
     t.integer  "version"
@@ -71,6 +85,8 @@ ActiveRecord::Schema.define(:version => 20150528082046) do
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
   end
+
+  add_index "recipe_versions", ["recipe_id"], :name => "index_recipe_versions_on_recipe_id"
 
   create_table "recipes", :force => true do |t|
     t.string   "name"
@@ -82,10 +98,14 @@ ActiveRecord::Schema.define(:version => 20150528082046) do
     t.integer  "user_id"
   end
 
+  add_index "recipes", ["name"], :name => "index_recipes_on_name"
+
   create_table "recipes_stages", :id => false, :force => true do |t|
     t.integer "recipe_id"
     t.integer "stage_id"
   end
+
+  add_index "recipes_stages", ["recipe_id", "stage_id"], :name => "index_recipes_stages_on_recipe_id_and_stage_id"
 
   create_table "roles", :force => true do |t|
     t.string   "name"
@@ -97,7 +117,11 @@ ActiveRecord::Schema.define(:version => 20150528082046) do
     t.integer  "no_release", :default => 0
     t.integer  "ssh_port"
     t.integer  "no_symlink", :default => 0
+    t.string   "ssh_user"
   end
+
+  add_index "roles", ["host_id"], :name => "index_roles_on_host_id"
+  add_index "roles", ["stage_id", "name"], :name => "index_roles_on_stage_id_and_name"
 
   create_table "stage_configurations", :force => true do |t|
   end
@@ -111,6 +135,9 @@ ActiveRecord::Schema.define(:version => 20150528082046) do
     t.integer  "locked_by_deployment_id"
     t.integer  "locked",                  :default => 0
   end
+
+  add_index "stages", ["locked_by_deployment_id"], :name => "index_stages_on_locked_by_deployment_id"
+  add_index "stages", ["project_id", "name"], :name => "index_stages_on_project_id_and_name"
 
   create_table "users", :force => true do |t|
     t.string   "login"

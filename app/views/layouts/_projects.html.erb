@@ -1,6 +1,11 @@
+<%
+  pcount = Project.count
+  projects = pcount>0 ? Project.order("name ASC").includes(:stages) : []
+  count_stages = Stage.group(:project_id).count
+-%>
 <div class="open" style="<%= show_if_opened(status) %>">
-  <% if Project.count > 0 %>
-    <% for project in Project.find(:all, :order => "name ASC") %>
+  <% if pcount > 0 %>
+    <% projects.each do |project| %>
       <a href="<%= project_path(project) %>" class="menu_link <%= active_link_class(project) %>" title="<%= project.name %>">
         <div class="menu_icons">
       
@@ -12,17 +17,17 @@
         </div>
       </a>
       <div id="<%= dom_id(project) %>_stages" style="<%= show_stages_of_project(project) %>">
-      <% if project.stages.count > 0 %>
-        <% for stage in project.stages %>
-          <a href="<%= project_stage_path(project, stage) %>" class="menu_link <%= active_link_class(stage) %>" title="<%= stage.name %>">
-            <div class="menu_link_title" style="padding-left: 30px; *padding-left: 33px"><%= stage.name %></div>
-          </a>
+      <% if count_stages[project.id] %>
+        <% project.stages.each do |stage| %>
+        <a href="<%= project_stage_path(project, stage) %>" class="menu_link <%= active_link_class(stage) %>" title="<%= stage.name %>">
+          <div class="menu_link_title" style="padding-left: 30px; *padding-left: 33px"><%= stage.name %></div>
+        </a>
         <% end %>
-    <% else %>
-      <a href="<%= new_project_stage_path(project) %>" class="menu_link menu_link_new">
-        <div class="menu_link_title" style="padding-left: 30px; *padding-left: 33px">New stage</div>
-      </a>
-    <% end %>
+      <% else %>
+        <a href="<%= new_project_stage_path(project) %>" class="menu_link menu_link_new">
+          <div class="menu_link_title" style="padding-left: 30px; *padding-left: 33px">New stage</div>
+        </a>
+      <% end %>
       </div>
     <% end %>
   <% else %>
@@ -32,6 +37,6 @@
 </div>
 <div class="closed" style="<%= show_if_closed(status) %>">
   <div class="menu_link_title">
-    <%= pluralize(Project.count, 'project')%>
+    <%= pluralize(pcount, 'project')%>
   </div>
 </div>

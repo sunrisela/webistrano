@@ -9,12 +9,12 @@
 - locals = { :title => title, :status => status, :path => hosts_path }
 = render(:partial => 'layouts/hosts', :locals => locals, :layout => 'layouts/menu_box')
 
-- title  = "Recipes"
-- status = controller_in_use_or(RecipesController, :open, Recipe)
-- locals = { :title => title, :status => status, :path => recipes_path }
-= render(:partial => 'layouts/recipes', :locals => locals, :layout => 'layouts/menu_box')
+/ - title  = "Recipes"
+/ - status = controller_in_use_or(RecipesController, :open, Recipe)
+/ - locals = { :title => title, :status => status, :path => recipes_path }
+/ = render(:partial => 'layouts/recipes', :locals => locals, :layout => 'layouts/menu_box')
 
-- title  = "Users"
-- status = controller_in_use_or(UsersController, :open, User)
-- locals = { :title => title, :status => status, :path => users_path }
-= render(:partial => 'layouts/users', :locals => locals, :layout => 'layouts/menu_box')
+/ - title  = "Users"
+/ - status = controller_in_use_or(UsersController, :open, User)
+/ - locals = { :title => title, :status => status, :path => users_path }
+/ = render(:partial => 'layouts/users', :locals => locals, :layout => 'layouts/menu_box')

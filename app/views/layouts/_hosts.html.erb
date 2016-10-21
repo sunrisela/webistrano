@@ -1,5 +1,8 @@
+<%
+  hcount = Host.count
+-%>
 <div class="open" style="<%= show_if_opened(status) %>">
-  <% if Host.count > 0 %>
+  <% if hcount > 0 %>
     <% for host in Host.find(:all, :order => "name ASC") %>
       <a href="<%= host_path(host) %>" class="menu_link <%= active_link_class(host) %>" title="<%= host.name %>">
         <div class="menu_link_title">
@@ -19,6 +22,6 @@
 
 <div class="closed" style="<%= show_if_closed(status) %>">
   <div class="menu_link_title">
-    <%= pluralize(Host.count, 'host')%>
+    <%= pluralize(hcount, 'host')%>
   </div>
 </div>

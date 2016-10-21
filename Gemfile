@@ -16,6 +16,8 @@ gem 'byebug', group: [:development, :test]
 
 gem 'sqlite3-ruby', group: [:development, :test]
 gem 'mysql2', group: [:production]
+# 索引检查工具
+gem 'lol_dba', group: [:development]
 
 # Gems used only for assets and not required
 # in production environments by default.

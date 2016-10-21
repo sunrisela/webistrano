@@ -26,6 +26,11 @@ class Role < ActiveRecord::Base
   DEFAULT_NAMES = %w(app db web aliyun_db)
   
   before_validation :set_name_from_custom_name
+
+  scope :deployed_at_least_once, -> { joins(:deployments).group(:role_id).reorder(nil) }
+  scope :deployed_done, -> { joins(:deployments).where('deployments.task' => Deployment::DEPLOY_TASKS, 'deployments.status' => Deployment::STATUS_SUCCESS).group(:role_id).reorder(nil) }
+  scope :setup_done, -> { joins(:deployments).where('deployments.task' => Deployment::SETUP_TASKS, 'deployments.status' => Deployment::STATUS_SUCCESS).group(:role_id).reorder(nil) }
+
   
   def custom_name
     if @custom_name.blank? && self.custom_name?
@@ -83,35 +88,56 @@ class Role < ActiveRecord::Base
   
   # tells if this role had a successful setup
   def setup_done?
-    deployed_at_least_once? && self.deployments.any?{|x| Deployment::SETUP_TASKS.include?(x.task) && x.success? }
+    @setup_done ||= self.deployments.where(task: Deployment::SETUP_TASKS, status: Deployment::STATUS_SUCCESS).exists?
   end
   
   # tells if this role had a successful deployment (deploy)
   def deployed?
-    deployed_at_least_once? && self.deployments.any?{|x| Deployment::DEPLOY_TASKS.include?(x.task) && x.success? }
+    @deployed ||= self.deployments.where(task: Deployment::DEPLOY_TASKS, status: Deployment::STATUS_SUCCESS).exists?
   end
   
   # tells if this role had any deployment at all
   def deployed_at_least_once?
-    !self.deployments.empty?
+    @deployed_at_least_once ||= self.deployments.exists?
   end
   
   def status
-    if !self.deployed_at_least_once? || (!self.deployed? && !self.setup_done? )
-      'blank'
-    else
-      if self.setup_done? && !self.deployed? 
-        'setup done'
-      elsif self.deployed_at_least_once? # self.deployed? && self.setup_done?
-        'deployed'
+    @status ||= begin
+      if !self.deployed_at_least_once? || (!self.deployed? && !self.setup_done? )
+        'blank'
       else
-        raise "unknown status for role #{self.id}: #{self.attributes.inspect}"
+        if self.setup_done? && !self.deployed? 
+          'setup done'
+        elsif self.deployed_at_least_once? # self.deployed? && self.setup_done?
+          'deployed'
+        else
+          raise "unknown status for role #{self.id}: #{self.attributes.inspect}"
+        end
       end
     end
   end
   
   def status_in_html
     "<span class='role_status_#{self.status.gsub(/ /, '_')}'>#{self.status}</span>"
+  end
+
+  def self.status(deployed_at_least_once, deployed_done, setup_done)
+    if !deployed_at_least_once || (!deployed_done && !setup_done )
+      'blank'
+    else
+      if setup_done && !deployed_done
+        'setup done'
+      elsif deployed_at_least_once
+        'deployed'
+      else
+        "unknown"
+      end
+    end
+  end
+
+  def self.status_in_html(deployed_at_least_once, deployed_done, setup_done)
+    st = self.status(deployed_at_least_once, deployed_done, setup_done)
+    "<span class='role_status_#{st.gsub(/ /, '_')}'>#{st}</span>"
   end
   
   def role_attribute_hash

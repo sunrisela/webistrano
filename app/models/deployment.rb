@@ -10,7 +10,7 @@ class Deployment < ActiveRecord::Base
 
   scope :recent, proc { |*args|
     max = args.first || 3
-    order('deployments.created_at DESC').limit(max)
+    reorder('deployments.created_at DESC').limit(max)
   }
 
   belongs_to :stage

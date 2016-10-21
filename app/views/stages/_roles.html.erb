@@ -1,9 +1,14 @@
-<% if @stage.hosts.empty? %>
+<% if Role.where(stage_id: @stage.id).where('roles.host_id IS NOT NULL').empty? %>
   <p>
     No hosts for this stage. A host is a physical host that this stage should deploy to.
     Please add a host.
   </p>
 <% else %>
+  <%
+    deployed_at_least_once_role_ids = @stage.roles.deployed_at_least_once.pluck(:role_id)
+    deployed_done_role_ids = @stage.roles.deployed_done.pluck(:role_id)
+    setup_done_role_ids = @stage.roles.setup_done.pluck(:role_id)
+  -%>
   <table class="sortable">
     <tr>
       <th width="19%">Host</th>
@@ -13,14 +18,14 @@
       <th width="35%">Attributes</th>
       <th width="1%">Status</th>
     </tr>
-  <% for role in @stage.roles %>
+  <% @stage.roles.includes(:host).each do |role| %>
     <tr class="<%= cycle :even, :odd, :name => 'roles' %>">
       <td><%= link_to role.host.name, host_path(role.host) %></td>
       <td><%= role.host.alias_name %></td>
       <td><%= role.name %></td>
       <td><%= role.ssh_port || 'default' %></td>
       <td><%= role.role_attribute_hash.inspect unless role.role_attribute_hash.blank?  %></td>
-      <td><%= raw role.status_in_html %></td>
+      <td><%= raw Role.status_in_html(deployed_at_least_once_role_ids.include?(role.id), deployed_done_role_ids.include?(role.id), setup_done_role_ids.include?(role.id)) %></td>
       <td><%= link_to 'Edit', edit_project_stage_role_path(@project, @stage, role) %></td>
       <td><%= link_to 'Delete', project_stage_role_path(@project, @stage, role), :confirm => 'Are you sure?', :method => :delete %></td>
     </tr>
